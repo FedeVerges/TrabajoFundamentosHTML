@@ -42,6 +42,16 @@ public class Detector_errores_HTML {
 
         return leer_archivo_html;
     }
+    
+    
+    
+    List<Linea> ModificarHTML(List<Linea>){
+        List <Linea> Modificar_archivo_HTML = new ArrayList();
+        
+        
+        
+        return Modificar_archivo_HTML;
+    }
 
     List<Error> publicidades(List<Linea> archivo_html) {
         List<Error> errores_encontrados = new ArrayList<Error>();
@@ -69,17 +79,42 @@ public class Detector_errores_HTML {
 
     List<Error> validacion_formularios(List<Linea> archivo_html) { // implementar 
         List<Error> errores_encontrados = new ArrayList<Error>();
-        
+
         char[] caracteres;
-        char[] bloqueA;
-        char[] invalidos;
+        char[] bloqueA = null;
+        char[] invalidos = {'"','=','¿','¡',' ',};
+        char[] validos = {};
 
         // Deteccion de error 
         for (Linea l : archivo_html) {
             if (l.get_linea().contains("<input")) { // Convertimos a cadena de caracteres. Verficiar los atributos. 
-                
-                for(int i =0; i<caracteres.length;i++){
+                caracteres = l.get_linea().toCharArray();
+                for (int i = 0; i < caracteres.length; i++) {
+                    if(caracteres[i] == '='){
+                        int j = i;
+                        while(caracteres[j] != '"'){ // recorro la linea hasta encontrar el primer igual
+                            j++;
+                        }
+                        while(caracteres[j+1] != '"'){ // recorro los caracteres que hay entre las comillas
+                            int indice = 0; // indice para que lo llene desde la posicion 0
+                            bloqueA[indice] = caracteres[j]; // Asingno ese bloque de caracteres a un nuevo bloque para ser analizado.
+                            indice ++;
+                            j++;
+                        }
+                        // Analisis del bloqueA
+                        for(i=0; i<bloqueA.length;i++){
+                            for(j=0;j<invalidos.length;j++){
+                                if(bloqueA[i] == invalidos[j]){ /* se ha detectado un error */
+                                    Error e = new Error(archivo_html.indexOf(l), "Error en input, caracteres no validos");
+                                    errores_encontrados.add(e);
+                                }
+                            }
+                        }
+                        
+                    }
+                    // aca habria que controlar lo que va despues del igual y antes del igual. 
                     
+
                 }
             }
 
@@ -89,3 +124,6 @@ public class Detector_errores_HTML {
     }
 
 }
+
+
+
