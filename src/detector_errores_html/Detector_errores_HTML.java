@@ -23,7 +23,7 @@ public class Detector_errores_HTML {
      * @param args the command line arguments
      */
     List<Linea> leer_html() {
-        
+
         List<Linea> leer_archivo_html = new ArrayList<Linea>();
         try {
             JFileChooser fChooser = new JFileChooser("F:\\");//Cambiar por otro directorio 
@@ -32,20 +32,21 @@ public class Detector_errores_HTML {
             FileInputStream fstream = new FileInputStream(archivo);
             DataInputStream in = new DataInputStream(fstream);
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            
+
             String linea;
             while ((linea = br.readLine()) != null) {
                 leer_archivo_html.add(new Linea(linea, linea.length()));
-                
+
             }
-            
+
             br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         return leer_archivo_html;
     }
+
     /*
     List<Linea> ModificarHTML(List<Linea> archivo_HTML) {
         List<Linea> Modificar_archivo_HTML = new ArrayList();
@@ -169,72 +170,73 @@ public class Detector_errores_HTML {
         
         return Modificar_archivo_HTML;
     }
-*/
+     */
     List<Error> publicidades(List<Linea> archivo_html
     ) {
         List<Error> errores_encontrados = new ArrayList<Error>();
-        
+
         return errores_encontrados;
     }
-    
+
     List<Error> comentarios(List<Linea> archivo_html
     ) {
         List<Error> errores_encontrados = new ArrayList<Error>();
-        
+
         return errores_encontrados;
     }
-    
+
     List<Error> estructura_codigo(List<Linea> archivo_html
     ) {
         List<Error> errores_encontrados = new ArrayList<Error>();
-        
+
         return errores_encontrados;
     }
-    
+
     List<Error> imagenes(List<Linea> archivo_html
     ) {
         List<Error> errores_encontrados = new ArrayList<Error>();
-        
+
         return errores_encontrados;
     }
-    
-    List<Error> validacion_formularios(List<Linea> archivo_html) { 
-        
+
+    List<Error> validacion_formularios(List<Linea> archivo_html) {
+
         List<Error> errores_encontrados = new ArrayList<Error>();
-        
+
         FileWriter fw = null;
         PrintWriter pw = null;
-        
+
         List<String> html = new ArrayList();
-        
-        List<String> formattedHTML;        
-        
+
+        List<String> formattedHTML;
+
         List<String> outputFile = new ArrayList<>();
-        
+
         String nuevaLinea;
         File f = new File("Correcciones.html");
         // Deteccion de error 
         try {
             fw = new FileWriter(f);
             pw = new PrintWriter(fw);
-            
+
             for (Linea l : archivo_html) {
                 html.add(l.get_linea());
             }
             formattedHTML = Analizador.htmlFormatter(html);
             for (int i = 0; i < formattedHTML.size(); i++) {
                 String s = formattedHTML.get(i);
-                System.out.println(s);
                 nuevaLinea = Analizador.lineAnalysis(s, i, errores_encontrados);
                 outputFile.add(nuevaLinea);
             }
             for (String s : outputFile) {
                 pw.println(s);
             }
+            System.out.println("Se imprimio el archivo 'Correcciones.html donde se indican las lineas de error y  se agregaron los respectivos pattern");
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            
+
             try {
                 // Nuevamente aprovechamos el finally para 
                 // asegurarnos que se cierra el fichero.
@@ -246,8 +248,8 @@ public class Detector_errores_HTML {
                 e2.printStackTrace();
             }
         }
-        
+
         return errores_encontrados;
     }
-    
+
 }

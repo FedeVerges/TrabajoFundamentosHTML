@@ -11,11 +11,10 @@ public class Analizador {
     public static void main(String[] args) {
 
         // groupExtractor();
-        
-        List <Error> errores = new ArrayList();
-        
+        List<Error> errores = new ArrayList();
+
         List<String> inputFile = new ArrayList<>();
-        
+
         inputFile.add("<img src><input type=\"__\" name=\"nombre\" id=\"_\" pattern=\"Expresi on");
         inputFile.add("_no_");
         inputFile.add("regular\"> <input >");
@@ -31,7 +30,7 @@ public class Analizador {
         for (int i = 0; i < formattedHTML.size(); i++) {
             String s = formattedHTML.get(i);
             // System.out.println("Reading line: " + s);
-            String editedLine = lineAnalysis(s, i,errores);
+            String editedLine = lineAnalysis(s, i, errores);
             outputFile.add(editedLine);
         }
 
@@ -53,15 +52,14 @@ public class Analizador {
         }
 
         preparedSuperS = preparedSuperS.replace("\n", "");
-        preparedSuperS = preparedSuperS.replace(">", ">\n\n");
+        preparedSuperS = preparedSuperS.replace(">", ">\n");
 
         String arr[] = preparedSuperS.split("\n");
         Collections.addAll(formattedFile, arr);
 
         return formattedFile;
-        
+
     }
-    
 
     public static String lineAnalysis(String line, int lineNumber, List<Error> errores) {
         // Analizador de lineas. Busca que la linea sea de tag input y que cumpla los requisitos.
@@ -77,40 +75,39 @@ public class Analizador {
 
             // Analizar que entre comillas sea correcto.
             if (!quoteAnalysis(inputMatcher.group(1))) {
-                
+
                 // Si hay error entre las comillas, generar error.
-                errores.add(new Error(lineNumber,"Error found! Illegal character in quotes, in line: "));
+                System.out.println("ERROR" + lineNumber);
+                errores.add(new Error(lineNumber, "Error found! Illegal character in quotes, in line: " + lineNumber));
                 //System.out.println("Error found! Illegal character in quotes, in line: " + lineNumber);
-                
-                
-            }
+                s= line.concat(" <!--This line has an error, please fix it (you have illeagal caracters)-->");
 
-            // Extraemos la linea de input
-            s = line; 
-            editedLine = inputMatcher.group(0);
+            } else {
 
-            if (editedLine.contains("name=")) {
-                // Si la linea de input contiene name, debemos eliminar el pattern que tenia e insertar el correcto.
-                // System.out.println("Found name attribute.");
-                // System.out.println("Removing pattern...");
-                s = s.replaceAll(editedLine ,patternRemover(editedLine));
-                
-                // System.out.println("Removed pattern result line: " + editedLine);
-                // System.out.println("Adding pattern...");
-                s = s.replaceAll(editedLine ,patternAdder(editedLine));
-                System.out.println("Linea Modificada "+ s);
-                // System.out.println("Added pattern result line: " + editedLine);
+                // Extraemos la linea de input
+                s = line;
+                editedLine = inputMatcher.group(0);
+
+                if (editedLine.contains("name=")) {
+                    // Si la linea de input contiene name, debemos eliminar el pattern que tenia e insertar el correcto.
+                    // System.out.println("Found name attribute.");
+                    // System.out.println("Removing pattern...");
+                    s = s.replaceAll(editedLine, patternRemover(editedLine));
+
+                    // System.out.println("Removed pattern result line: " + editedLine);
+                    // System.out.println("Adding pattern...");
+                    s = s.replaceAll(editedLine, patternAdder(editedLine));
+                    // System.out.println("Added pattern result line: " + editedLine);
+                }
             }
-        }
-        // De lo contrario, no analizar nada.
+        } // De lo contrario, no analizar nada.
         else {
-            
+
             s = line;
         }
         return s;
     }
-    
-    
+
     private static String patternAdder(String line) {
         return line.replace(">", patternExpression(nameValueExtractor(line)));
 
@@ -152,7 +149,7 @@ public class Analizador {
         switch (nameValue) {
             case "nombre":
                 return "pattern=\"<[a-zA-Z]{2-30}/>\">  <!--This is a comment. Comments are not displayed in the browser-->";
-            case "apellido":
+            case "apellidos":
                 return "pattern=\"<[a-zA-Z]{2-30}/>\">  <!--This is a comment. Comments are not displayed in the browser-->";
             case "dni":
                 return "pattern=\"<[0-9]{8}/>\">  <!--This is a comment. Comments are not displayed in the browser-->";

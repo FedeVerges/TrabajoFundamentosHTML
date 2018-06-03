@@ -106,7 +106,7 @@ public class Visualizar extends javax.swing.JFrame {
         errores.addAll(deh.validacion_formularios(archivo_html));
 
         // Ejemplo:          
-        errores.add(new Error(3,"Comentario del error en la linea 3"));
+        //errores.add(new Error(3,"Comentario del error en la linea 3"));
         // errores.add(new Error(2,"Comentario del error en la linea 2"));
         // errores.add(new Error(2,"Comentario del error en la linea 2 v2"));
         // errores.add(new Error(2,"Comentario del error en la linea 2 v3"));
