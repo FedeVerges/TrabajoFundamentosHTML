@@ -54,6 +54,8 @@ public class Detector_errores_HTML {
         char[] bloqueB = null;
         String name;
         String[] nombres = {"Nombre", "Apellido", "DNI", "Cuil", "Correo_electronico", "Telefono", "Fecha_de_nacimiento", "Comentarios"};
+        String lineaModificada = "-"; // linea del archivo html modificada. 
+        String nuevo = "-"; // string auxiliar.
 
         FileWriter html = null;
         PrintWriter pw = null;
@@ -86,12 +88,21 @@ public class Detector_errores_HTML {
                                     // Controlar que name sea igual al arreglo de nombres 
                                     for (i = 0; i < nombres.length; i++) {
                                         if (name.equals(nombres[i])) {
+
                                             switch (name) {
                                                 case "Nombre":
                                                     agregado = "pattern=\"<[a-zA-Z]{2-30}/>";
+
+                                                    nuevo = l.get_linea().replace(">", " "); // agregar el caso de imput en mas de una linea
+
+                                                    nuevo = nuevo.concat(agregado);
+
+                                                    lineaModificada = l.get_linea().replace((CharSequence) l, nuevo);
+
                                                     break;
                                                 case "Apellido":
                                                     agregado = "pattern=\"<[a-zA-Z]{2-30}/>";
+
                                                     break;
                                                 case "DNI":
                                                     agregado = "pattern=\"<[0-9]{8}/>";
@@ -111,10 +122,19 @@ public class Detector_errores_HTML {
                                                 case "Comentarios":
                                                     agregado = "pattern=\"<[a-zA-Z0-9]*/>";
                                                     break;
+                                                default:
+                                                    agregado = ">";
+                                                    break;
 
                                             }
+                                            nuevo = l.get_linea().replace(">", " "); // agregar el caso de imput en mas de una linea
+
+                                            nuevo = nuevo.concat(agregado);
+
+                                            lineaModificada = l.get_linea().replace((CharSequence) l, nuevo);
 
                                         }
+
                                     }
 
                                 }
@@ -123,7 +143,8 @@ public class Detector_errores_HTML {
                         }
 
                     }
-
+                    Linea lineamodificada = new Linea(lineaModificada, lineaModificada.length());
+                    Modificar_archivo_HTML.add(lineamodificada);
                 } else {
                     Modificar_archivo_HTML.add(l);
                 }
@@ -132,6 +153,10 @@ public class Detector_errores_HTML {
         }
 
         return Modificar_archivo_HTML;
+    }
+    
+    public void escribirHTML(List<Linea> Archivo){
+        
     }
 
     List<Error> publicidades(List<Linea> archivo_html

@@ -106,6 +106,7 @@ public class Visualizar extends javax.swing.JFrame {
         errores.addAll(deh.estructura_codigo(archivo_html));
         errores.addAll(deh.imagenes(archivo_html));        
         errores.addAll(deh.validacion_formularios(archivo_html));        
+        List<Linea> htmlModificado = deh.ModificarHTML(archivo_html);
 
        // Ejemplo:          
        // errores.add(new Error(3,"Comentario del error en la linea 3"));
